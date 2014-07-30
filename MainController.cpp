@@ -59,44 +59,51 @@ int checkROI()
 
 int main(int argc, const char** argv)
 {
-    cout << "this is the main class in the facial recognition system!" << endl;	   
+    cout << "facial recognition system for driver fatgure" << endl;	   
     CascadeClassifier face_cascade;																	//create the cascade classifier object used for the face detection
-    face_cascade.load("haarcascade_frontalface_alt.xml");											//use the haarcascade_frontalface_alt.xml library
-	cout << "loading haarcascade xml file." << endl;
+	CascadeClassifier eyes_cacscade;
     
-    VideoCapture captureDevice;																		//setup video capture device and link it to the first capture device
-    captureDevice.open(0);
+	
+	if (face_cascade.load("haarcascade_frontalface_alt.xml") == -1)									//use the haarcascade_frontalface_alt.xml library
+	{
+		cout << "failed to load the haarcascade xml file... exiting program!!!" << endl;
+		return -1;
+	}
+	else
+		cout << "loading haarcascade xml file." << endl;
     
-    Mat captureFrame;																				//setup image files used in the capture process
-    Mat grayscaleFrame;
+    VideoCapture capture_device;																	//setup video capture device and link it to the first capture device
+    capture_device.open(0);
+    
+    Mat capture_frame;																				//setup image files used in the capture process
+    Mat grayscale_frame;
  
-    namedWindow("LiveWebcamFeed", WINDOW_AUTOSIZE);																//create a window to present the results
-	// namedWindow("LiveWebcamFeed - Grayscale image", 1);
+    namedWindow("LiveWebcamFeed", WINDOW_AUTOSIZE);													//create a window to present the results
 	cout << "created the display window objects!" << endl;
     
     while(true)																						//create a loop to capture and find faces
     {       
-        captureDevice>>captureFrame;																//capture a new image frame
+        capture_device>>capture_frame;																//capture a new image frame
        
-        cvtColor(captureFrame, grayscaleFrame, CV_BGR2GRAY);										 //convert captured image to gray scale and equalize
-        equalizeHist(grayscaleFrame, grayscaleFrame);
+        cvtColor(capture_frame, grayscale_frame, CV_BGR2GRAY);										 //convert captured image to gray scale and equalize
+        equalizeHist(grayscale_frame, grayscale_frame);
        
         std::vector<Rect> faces;																	 //create a vector array to store the face found
         
-        face_cascade.detectMultiScale(grayscaleFrame, faces, 1.1, 3, CV_HAAR_FIND_BIGGEST_OBJECT|CV_HAAR_SCALE_IMAGE, Size(30,30));							//find faces and store them in the vector array
+        face_cascade.detectMultiScale(grayscale_frame, faces, 1.1, 3, 
+			CV_HAAR_FIND_BIGGEST_OBJECT|CV_HAAR_SCALE_IMAGE, Size(30,30));							//find faces and store them in the vector array
         
         for(int i = 0; i < faces.size(); i++)														//draw a rectangle for all found faces in the vector array on the original image
         {
             Point pt1(faces[i].x + faces[i].width, faces[i].y + faces[i].height);
             Point pt2(faces[i].x, faces[i].y);
  
-            rectangle(captureFrame, pt1, pt2, cvScalar(0, 255, 0, 0), 1, 8, 0);
+            rectangle(capture_frame, pt1, pt2, cvScalar(0, 255, 0, 0), 1, 8, 0);
         }
  
-        imshow("LiveWebcamFeed", captureFrame);														//print the output
-		// imshow("LiveWebcamFeed - Grayscale image", grayscaleFrame);
+        imshow("LiveWebcamFeed", capture_frame);													//print the output
  
-        if (waitKey(33) == 27)																		//pause for 33ms
+        if (waitKey(10) == 27)																		//pause for 10 milliseconds
 		{
 			cout << "user pressed 'Esc', exiting program!" << endl;
 			break;
