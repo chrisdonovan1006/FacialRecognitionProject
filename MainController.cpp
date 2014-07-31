@@ -7,6 +7,8 @@
 #include <iostream>
 #include <stdio.h>
 
+#include "ZoomProcess.h"
+
  
 using namespace std;
 using namespace cv;
@@ -64,13 +66,16 @@ int main(int argc, const char** argv)
 	CascadeClassifier eyes_cacscade;
     
 	
-	if (face_cascade.load("haarcascade_frontalface_alt.xml") == -1)									//use the haarcascade_frontalface_alt.xml library
+	if (!face_cascade.load("haarcascade_frontalface_alt.xml"))										//use the haarcascade_frontalface_alt.xml library
 	{
 		cout << "failed to load the haarcascade xml file... exiting program!!!" << endl;
 		return -1;
 	}
 	else
+	{
 		cout << "loading haarcascade xml file." << endl;
+	}
+		
     
     VideoCapture capture_device;																	//setup video capture device and link it to the first capture device
     capture_device.open(0);

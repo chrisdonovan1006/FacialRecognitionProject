@@ -139,6 +139,10 @@
   <ItemGroup>
     <ClCompile Include="MainController.cpp" />
     <ClCompile Include="Misc.cpp" />
+    <ClCompile Include="ZoomProcess.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ZoomProcess.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
