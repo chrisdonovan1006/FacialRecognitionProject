@@ -7,75 +7,49 @@
 #include <iostream>
 #include <stdio.h>
 
-#include "ZoomProcess.h"
+//#include "Utils.h"
+//#include "ZoomProcess.h"
 
- 
 using namespace std;
 using namespace cv;
-
-
-///////////////////////////////////////////////////////////////////////////////////////////////////
-///////////////////////////////////// PROCESS METHODS /////////////////////////////////////////////
-///////////////////////////////////////////////////////////////////////////////////////////////////
- 
-Mat grayscaleFrame(Mat colourFrame)
-{
-	Mat grayScaleFrame;
-	return grayScaleFrame;
-}
-
-int processImage(Mat procImg)
-{
-	//This method will process the image by removing the colour and returning the grayscale image.
-
-	return 0;
-}
-
-int getCurrentImageHistogram(Mat procImg)
-{
-	// here the image histogram will be reteived
-
-	return 0;
-}
-
-int compareHistogram(int arry1[], int arry2[])
-{
-	// Here the current histogram will be compare against the previous image histogram.
-
-	return 0;
-}
-
-
-int checkROI()
-{
-	// this where the region of interest will checked (eyes, mouth, etc)
-
-	return 0;
-}
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////// MAIN METHOD /////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
+
+int printMsg(string msg)
+{
+	cout << msg << endl;
+	return 0;
+}
 
 
 int main(int argc, const char** argv)
 {
     cout << "facial recognition system for driver fatgure" << endl;	   
     CascadeClassifier face_cascade;																	//create the cascade classifier object used for the face detection
-	CascadeClassifier eyes_cacscade;
+	CascadeClassifier eye_cascade;
     
-	
 	if (!face_cascade.load("haarcascade_frontalface_alt.xml"))										//use the haarcascade_frontalface_alt.xml library
 	{
-		cout << "failed to load the haarcascade xml file... exiting program!!!" << endl;
+		printMsg("failed to load the haarcascade_frontalface_alt.xml file... exiting program!!!");
 		return -1;
 	}
 	else
 	{
-		cout << "loading haarcascade xml file." << endl;
+		printMsg("loading haarcascade_frontalface_alt.xml file.");
 	}
-		
-    
+
+	if (!eye_cascade.load("haarcascade_eye.xml"))										//use the haarcascade_frontalface_alt.xml library
+	{
+		printMsg("failed to load the haarcascade_eye.xml file... exiting program!!!");
+		return -1;
+	}
+	else
+	{
+		printMsg("loading haarcascade_eye.xml file.");
+	}
+	
     VideoCapture capture_device;																	//setup video capture device and link it to the first capture device
     capture_device.open(0);
     
@@ -110,7 +84,11 @@ int main(int argc, const char** argv)
         }
 		
         imshow("LiveWebcamFeed", capture_frame);													//print the output
-		imshow("Cropped Image", cropped_image);													//print the output
+		if (cropped_image.cols != 0 && cropped_image.rows != 0)
+		{
+			imshow("CroppedImage", cropped_image);
+		}
+															//print the output
  
         if (waitKey(10) == 27)																		//pause for 10 milliseconds
 		{

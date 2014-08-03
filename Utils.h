@@ -1,5 +1,5 @@
-#ifndef _ZoomProcess
-#define _ZoomProcess
+#ifndef _Utils
+#define _Utils
 
 // #include <include externak libs here>
 
@@ -7,17 +7,17 @@ using namespace std;
 using namespace cv;
 
 // ***************************** _ZoomProcess *************************
-class ZoomProcess
+class Utils
 {
 public:
-	ZoomProcess();
+	Utils();
 	
 	int activate();
 
-	Mat cropImage(Mat image);
+	void printMsg(const char* msg);
 	
 private:	
-	Mat m_zoom_image;
+	
 };
 
-#endif //  _ZoomProcess
+#endif //  _Utils

@@ -393,3 +393,75 @@
  //  // Release the temp image created.  
  //  cvReleaseImage( &temp );  
  //}
+
+
+
+
+//
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+/////////////////////////////////////// PROCESS METHODS /////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////////////////////
+// 
+//Mat grayscaleFrame(Mat colourFrame)
+//{
+//	Mat grayScaleFrame;
+//	return grayScaleFrame;
+//}
+//
+//int processImage(Mat procImg)
+//{
+//	//This method will process the image by removing the colour and returning the grayscale image.
+//
+//	return 0;
+//}
+//
+//int getCurrentImageHistogram(Mat procImg)
+//{
+//	// here the image histogram will be reteived
+//
+//	return 0;
+//}
+//
+//int compareHistogram(int arry1[], int arry2[])
+//{
+//	// Here the current histogram will be compare against the previous image histogram.
+//
+//	return 0;
+//}
+//
+//
+//int checkROI()
+//{
+//	// this where the region of interest will checked (eyes, mouth, etc)
+//
+//	return 0;
+//}
+
+
+//
+//int loadCascades(CascadeClassifier face_cascade, CascadeClassifier eye_cascade)
+//{
+//int ret_val = 0;
+//	
+//if (!face_cascade.load("haarcascade_frontalface_alt.xml"))										//use the haarcascade_frontalface_alt.xml library
+//{
+//	printMsg("failed to load the haarcascade xml file... exiting program!!!");
+//	ret_val = -1;
+//}
+//else
+//{
+//	cout << "loading haarcascade xml file." << endl;
+//}
+//
+//if (!eye_cascade.load("haarcascade_eye.xml"))										//use the haarcascade_frontalface_alt.xml library
+//{
+//	cout << "failed to load the haarcascade_eye.xml file... exiting program!!!" << endl;
+//	ret_val = -1;
+//}
+//else
+//{
+//	cout << "loading haarcascade xml file." << endl;
+//}
+//
+//return ret_val;
+//}
