@@ -17,80 +17,107 @@ using namespace cv;
 ///////////////////////////////////////// MAIN METHOD /////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
-int printMsg(string msg)
+int printMsg(string msg, int code)
 {
-	cout << msg << endl;
+	if (code == 0)
+		cout << msg << endl;
+	else
+		cout << msg << code << endl;
 	return 0;
 }
 
 
 int main(int argc, const char** argv)
 {
-    cout << "facial recognition system for driver fatgure" << endl;	   
-    CascadeClassifier face_cascade;																	//create the cascade classifier object used for the face detection
+    printMsg("facial recognition system for driver fatgure", 0);
+	//create the cascade classifier objects used for the face and eye detection
+    CascadeClassifier face_cascade;																	
 	CascadeClassifier eye_cascade;
     
-	if (!face_cascade.load("haarcascade_frontalface_alt.xml"))										//use the haarcascade_frontalface_alt.xml library
+	// load the pre-built classifier objects
+	if (!face_cascade.load("haarcascade_frontalface_alt.xml"))
 	{
-		printMsg("failed to load the haarcascade_frontalface_alt.xml file... exiting program!!!");
+		printMsg("failed to load the haarcascade_frontalface_alt.xml file... exiting program!!!", 0);
 		return -1;
 	}
 	else
 	{
-		printMsg("loading haarcascade_frontalface_alt.xml file.");
+		printMsg("loading haarcascade_frontalface_alt.xml file.", 0);
 	}
 
-	if (!eye_cascade.load("haarcascade_eye.xml"))										//use the haarcascade_frontalface_alt.xml library
+	if (!eye_cascade.load("haarcascade_eye_tree_eyeglasses.xml"))
 	{
-		printMsg("failed to load the haarcascade_eye.xml file... exiting program!!!");
+		printMsg("failed to load the haarcascade_eye_tree_eyeglasses.xml file... exiting program!!!", 0);
 		return -1;
 	}
 	else
 	{
-		printMsg("loading haarcascade_eye.xml file.");
+		printMsg("loading haarcascade_eye.xml file.", 0);
 	}
 	
-    VideoCapture capture_device;																	//setup video capture device and link it to the first capture device
+    //setup video capture device and link it to the first capture device
+	VideoCapture capture_device;																	
     capture_device.open(0);
     
-    Mat capture_frame;																				//setup image files used in the capture process
+	//setup image files used in the capture process
+    Mat capture_frame;																				
     Mat grayscale_frame;
-	Mat cropped_image;
- 
-    namedWindow("LiveWebcamFeed", WINDOW_AUTOSIZE);													//create a window to present the results
-	cout << "created the display window objects!" << endl;
+	Mat cropped_frame;
+	
+	//create a window to present the results
+    namedWindow("LiveWebcamFeed", WINDOW_AUTOSIZE);													
+	printMsg("created the display window objects!", 0);
     
-    while(true)																						//create a loop to capture and find faces
+    while(true)
     {       
-        capture_device>>capture_frame;																//capture a new image frame
+        //capture a new image frame
+		capture_device >> capture_frame; 
        
-        cvtColor(capture_frame, grayscale_frame, CV_BGR2GRAY);										 //convert captured image to gray scale and equalize
+        //convert captured image to gray scale and equalize
+		cvtColor(capture_frame, grayscale_frame, CV_BGR2GRAY);										 
         equalizeHist(grayscale_frame, grayscale_frame);
        
-        std::vector<Rect> faces;																	 //create a vector array to store the face found
+        //create a vector array to store any found faces
+		vector<Rect> faces;																			
         
+		//find faces and store them in the vector array
         face_cascade.detectMultiScale(grayscale_frame, faces, 1.1, 3, 
-			CV_HAAR_FIND_BIGGEST_OBJECT|CV_HAAR_SCALE_IMAGE, Size(30,30));							//find faces and store them in the vector array
-        
-        for(int i = 0; i < faces.size(); i++)														//draw a rectangle for all found faces in the vector array on the original image
-        {
-            Point pt1(faces[i].x + faces[i].width, faces[i].y + faces[i].height);
-            Point pt2(faces[i].x, faces[i].y);
-			
-			Rect crop_rect(pt1, pt2);
-            rectangle(capture_frame, pt1, pt2, cvScalar(0, 255, 0, 0), 1, 8, 0);
-
-			cropped_image = capture_frame(crop_rect);
-        }
+			CV_HAAR_FIND_BIGGEST_OBJECT|CV_HAAR_SCALE_IMAGE, Size(30,30));							
+		// printMsg("no. of faces: ", faces.size());
 		
+        for(int i = 0; i < faces.size(); i++)														
+        {
+            //draw a rectangle for all found faces in the vector array on the original image
+			Point pt1(faces[i].x + faces[i].width, faces[i].y + faces[i].height);
+            Point pt2(faces[i].x, faces[i].y);
+
+            rectangle(capture_frame, pt1, pt2, cvScalar(0, 255, 0, 0), 1, 8, 0);
+			
+			// extract the face from the image
+			cropped_frame = capture_frame(faces[i]);
+
+			// create a veactor array to store the eyes
+			vector<Rect> eyes;
+			//find eyes and store them in the vector array
+			eye_cascade.detectMultiScale(cropped_frame, eyes, 1.1, 3, 
+			0|CV_HAAR_SCALE_IMAGE, Size(30,30));
+
+			for (int j = 0; j < eyes.size(); j++)
+			{
+				Point center( faces[i].x + eyes[j].x + eyes[j].width*0.5, 
+						faces[i].y + eyes[j].y + eyes[j].height*0.5 );
+				int radius = cvRound( (eyes[j].width + eyes[j].height)*0.25 );
+				circle( capture_frame, center, radius, Scalar( 255, 0, 0 ), 1, 8, 0 );
+			}
+        }
+
         imshow("LiveWebcamFeed", capture_frame);													//print the output
-		if (cropped_image.cols != 0 && cropped_image.rows != 0)
+		if (cropped_frame.cols != 0 && cropped_frame.rows != 0)
 		{
-			imshow("CroppedImage", cropped_image);
+			imshow("CroppedImage", cropped_frame);													//print the output
 		}
-															//print the output
- 
-        if (waitKey(10) == 27)																		//pause for 10 milliseconds
+															
+        if (waitKey(33) == 27)																		//pause for 10 milliseconds
 		{
 			cout << "user pressed 'Esc', exiting program!" << endl;
 			break;
