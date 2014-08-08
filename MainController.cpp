@@ -26,6 +26,29 @@ int printMsg(string msg, int code)
 	return 0;
 }
 
+int display_histo(Mat src_image, const char* roi_name)
+{
+    Mat hist;
+	int histSize = 64;
+
+    calcHist(&src_image, 1, 0, Mat(), hist, 1, &histSize, 0);
+
+
+    Mat histImage = Mat::ones(200, 320, CV_8U)*255;
+
+    normalize(hist, hist, 0, histImage.rows, CV_MINMAX, CV_32F);
+
+    histImage = Scalar::all(255);
+    int binW = cvRound((double)histImage.cols/histSize);
+
+    for( int i = 0; i < histSize; i++ )
+        rectangle( histImage, Point(i*binW, histImage.rows),
+                   Point((i+1)*binW, histImage.rows - cvRound(hist.at<float>(i))),
+                   Scalar::all(0), -1, 8, 0 );
+    imshow(roi_name, histImage);
+
+	return 0;
+}
 
 int main(int argc, const char** argv)
 {
@@ -63,6 +86,7 @@ int main(int argc, const char** argv)
     Mat capture_frame;																				
     Mat grayscale_frame;
 	Mat cropped_frame;
+	Mat roi_eyes;
 	
 	//create a window to present the results
     namedWindow("LiveWebcamFeed", WINDOW_AUTOSIZE);													
@@ -95,7 +119,7 @@ int main(int argc, const char** argv)
 			
 			// extract the face from the image
 			cropped_frame = capture_frame(faces[i]);
-
+			
 			// create a veactor array to store the eyes
 			vector<Rect> eyes;
 			//find eyes and store them in the vector array
@@ -108,10 +132,18 @@ int main(int argc, const char** argv)
 						faces[i].y + eyes[j].y + eyes[j].height*0.5 );
 				int radius = cvRound( (eyes[j].width + eyes[j].height)*0.25 );
 				circle( capture_frame, center, radius, Scalar( 255, 0, 0 ), 1, 8, 0 );
+				roi_eyes = capture_frame(eyes[j]);
 			}
-        }
 
-        imshow("LiveWebcamFeed", capture_frame);													//print the output
+			display_histo(grayscale_frame, "main_image");
+			/*if (roi_eyes.cols != 0 && roi_eyes.rows != 0)
+			{
+				display_histo(roi_eyes, "roi_eyes");
+			}*/
+		}
+
+        
+		imshow("LiveWebcamFeed", capture_frame);													//print the output
 		if (cropped_frame.cols != 0 && cropped_frame.rows != 0)
 		{
 			imshow("CroppedImage", cropped_frame);													//print the output
@@ -126,6 +158,7 @@ int main(int argc, const char** argv)
  
     return 0;
 }
+
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 

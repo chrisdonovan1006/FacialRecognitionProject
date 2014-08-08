@@ -154,7 +154,174 @@
 //}
 
 
+	////++++++++++++ Histogram Options ++++++++++++
+	//void displayHistogram()
+	//{
+	//// create the graphic object
+	//Mat histo_image;
+	//// display the panel
+	//histoPanel.Visible = true;
+	//// draw the histogram
+	//drawHistogram(original_image, histoPanel, g, Color.OrangeRed);
+	//// clean up
+	//g.Dispose();
+	//}
 
+	//private void drawHistogram(Bitmap img, Panel panel, Graphics g, Color c)
+	//{
+	//// paint the background
+	//g.Clear(SystemColors.Control);
+	//// 
+	//float height = 0;
+	//int maxValue = getMaxValue(img);
+	//int max_height = histoPanel.Height - (panel.Height / 10);
+	//float scaleFactor = (maxValue / max_height);
+
+	//Pen pen = new Pen(c, 1);
+
+	//// invert the matrix on the y-axis
+	//Matrix tranformPanel = new Matrix();
+	//tranformPanel = new Matrix(1, 0, 0, -1, 0, panel.Height);
+	//g.Transform = tranformPanel;
+
+
+	//for (int x = 0; x < 256; x++)
+	//{
+	//	height = bins[x] / scaleFactor;
+	//	g.DrawLine(pen, x, 0, x, height);
+	//}
+	//}
+
+	//private int getMaxValue(Bitmap img)
+	//{
+	//int width = img.Width;
+	//int height = img.Height;
+	//int maxValue = 0;
+
+	//// reset the bins array to all zeros
+	//for (int x = 0; x < 256; x++)
+	//{
+	//	bins[x] = 0;
+	//}
+
+	//BitmapData bmData = img.LockBits(new Rectangle(0, 0, width, height), ImageLockMode.ReadWrite, PixelFormat.Format8bppIndexed);
+
+	//int stride = bmData.Stride;
+	//System.IntPtr Scan0 = bmData.Scan0;
+
+	//// loop through the image and get the values
+	//unsafe
+	//{
+	//	byte* p = (byte*)(void*)Scan0;
+
+	//	for (int y = 0; y < height; y++)
+	//	{
+	//		for (int x = 0; x < width; x++)
+	//		{
+	//			// add the byte value
+	//			bins[p[0]]++;
+	//			// move to next byte
+	//			p++;
+	//		}
+	//	}
+	//}
+
+	//img.UnlockBits(bmData);
+
+	//for (int i = 0; i < bins.Length; i++)
+	//{
+	//	// loop through the bins
+	//	// find the max value in
+	//	// the array
+	//	if (bins[i] >= maxValue)
+	//	{
+	//		maxValue = bins[i];
+	//	}
+ //                   
+	//}
+
+	//return maxValue;
+	//}
+
+	//private void equaliseToolStripMenuItem_Click(object sender, EventArgs e)
+	//{
+	//currentProcess = "Equalise Image";
+	//curProcLbl.Text = currentProcess;
+	//isImageOpen();
+	//disableTrackBar();
+	//label2.Visible = true;
+	//turnOnLabels();
+	//float[] distributionValues = new float[256]; // CDF - cumulative distribution function 
+	//float[] nkn = new float[256]; // Nk/N
+	//float totalPixs = original_image.Height * original_image.Width;
+
+	//Graphics g = equalisePanel.CreateGraphics();
+
+	//byte oPix;
+
+	///*
+	//	Nk is the total number of times that values appears, n is them total number of
+	//	*  pixels. This value is used to calc the CDF (running total).
+	//	*/
+
+	//for (int x = 0; x < bins.Length; x++)
+	//{
+	//	if (bins[x] == 0)
+	//	{
+	//		nkn[x] = 0;
+	//	}
+	//	else
+	//	{
+	//		nkn[x] = bins[x] / totalPixs;
+	//	}
+ //               
+	//	if (x == 0)
+	//	{
+	//		distributionValues[x] = nkn[0];
+	//	}
+	//	else
+	//	{
+	//		distributionValues[x] = nkn[x] + distributionValues[x - 1];
+	//	}
+	//}
+
+	//for (int x = 0; x < bins.Length; x++)
+	//{
+	//	distributionValues[x] = distributionValues[x] * 255;
+	//}
+
+
+	//proc_image = original_image.Clone(new Rectangle(0, 0, original_image.Width, original_image.Height), PixelFormat.Format8bppIndexed);
+
+	//BitmapData bmDataor = original_image.LockBits(new Rectangle(0, 0, original_image.Width, original_image.Height), ImageLockMode.ReadWrite, PixelFormat.Format8bppIndexed);
+	//BitmapData bmDatapr = proc_image.LockBits(new Rectangle(0, 0, original_image.Width, original_image.Height), ImageLockMode.ReadWrite, PixelFormat.Format8bppIndexed);
+
+	//int stride = bmDataor.Stride;
+
+	//unsafe
+	//{
+	//	byte* o = (byte*)(void*)bmDataor.Scan0;
+	//	byte* p = (byte*)(void*)bmDatapr.Scan0;
+
+	//	for (int y = 0; y < height; y++)
+	//	{
+	//		for (int x = 0; x < width; x++)
+	//		{
+	//			oPix = o[y * stride + x];
+	//			p[y * stride + x] = (byte)distributionValues[oPix];
+	//		}
+
+	//	}
+	//}
+
+	//proc_image.UnlockBits(bmDatapr);
+	//original_image.UnlockBits(bmDataor);
+	//pBox.BackgroundImage = proc_image;
+
+	//equalisePanel.Visible = true;
+	//drawHistogram(proc_image, equalisePanel, g, Color.BlueViolet);
+	//g.Dispose();
+	//}
 
 
 
